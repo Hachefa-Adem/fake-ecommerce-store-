@@ -4,7 +4,6 @@ Une boutique en ligne moderne et réactive construite avec **React + Vite**. Dé
 
 ## ✨ Fonctionnalités
 
-- 🎨 **Design Premium** : Interface épurée avec palette de couleurs chaleureuse
 - 📱 **Fully Responsive** : Optimisé pour mobile, tablette et desktop
 - 🔍 **Recherche Intelligente** : Filtrez les produits par nom ou catégorie en temps réel
 - 🛒 **Panier Dynamique** : Gestion complète du panier avec quantités
