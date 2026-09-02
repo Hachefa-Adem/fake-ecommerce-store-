@@ -3,11 +3,15 @@ import ProductCard from '../components/ProductCard'
 
 function Products({ products = [], addToCart, limit, title = 'Nos produits', search = '' }) {
   const visibleProducts = useMemo(() => {
+    const text = (search || '').toLowerCase()
+
     const filteredProducts = products.filter((product) => {
-      const text = search.toLowerCase()
+      // guard against missing fields to avoid runtime errors when calling toLowerCase()
+      const name = (product && product.name) ? String(product.name).toLowerCase() : ''
+      const description = (product && product.description) ? String(product.description).toLowerCase() : ''
+
       return (
-        product.name.toLowerCase().includes(text) ||
-        product.description.toLowerCase().includes(text)
+        name.includes(text) || description.includes(text)
       )
     })
 
@@ -23,6 +27,10 @@ function Products({ products = [], addToCart, limit, title = 'Nos produits', sea
           <ProductCard key={product.id} product={product} onAddToCart={addToCart} />
         ))}
       </section>
+
+      {visibleProducts.length === 0 && (
+        <p className="empty-state">Aucun produit trouvé.</p>
+      )}
     </main>
   )
 }
