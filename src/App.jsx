@@ -8,24 +8,39 @@ function App() {
   const [products, setProducts] = useState([])
   const [cart, setCart] = useState([])
   const [search, setSearch] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     async function fetchProducts() {
+      setLoading(true)
+      setError(null)
+
       try {
         const response = await fetch('https://fakestoreapi.com/products')
+        if (!response.ok) {
+          throw new Error(`HTTP error ${response.status}`)
+        }
+
         const data = await response.json()
+        // debug: show the raw API response in the console
+        console.log('fetched products', data)
 
         const mappedProducts = data.map((product) => ({
           id: product.id,
           name: product.title,
-          description: product.category,
+          // use the API's description when available; fall back to category
+          description: product.description ?? product.category ?? '',
           price: product.price,
           image: product.image,
         }))
 
         setProducts(mappedProducts)
-      } catch (error) {
-        console.error('Erreur lors du chargement des produits:', error)
+      } catch (err) {
+        console.error('Erreur lors du chargement des produits:', err)
+        setError(err.message || 'Erreur inconnue')
+      } finally {
+        setLoading(false)
       }
     }
 
@@ -84,6 +99,9 @@ function App() {
           </button>
         </div>
       </nav>
+
+      {loading && <p className="loading">Chargement des produits…</p>}
+      {error && <p className="error">Erreur: {error}</p>}
 
       {currentPage === 'home' && (
         <Home products={products} addToCart={addToCart} search={search} />
